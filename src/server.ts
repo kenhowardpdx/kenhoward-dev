@@ -1,8 +1,6 @@
-'use strict';
+import Hapi from '@hapi/hapi'
 
-const Hapi = require('@hapi/hapi')
-
-const init = async () => {
+const init = async (): Promise<void> => {
   const server = Hapi.server({
     port: 8080,
     host: '0.0.0.0'
@@ -11,7 +9,7 @@ const init = async () => {
   server.route({
     method: 'GET',
     path: '/',
-    handler: (request, h) => 'Hello World!'
+    handler: (request, h) => 'Hello World! (w/ TypeScript)'
   })
 
   await server.start()
@@ -23,4 +21,5 @@ process.on('unhandledRejection', (err) => {
   process.exit(1)
 })
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 init()
