@@ -6,11 +6,12 @@ WORKDIR ${SERVICE_HOME}
 
 COPY package*.json .
 COPY ./src ./src
-COPY tsconfig.json .
+COPY ./src/templates ./out/kenhoward-dev/templates
+COPY tsconfig.prod.json .
 # install dependencies
 RUN npm install
 # build
-RUN npx tsc --outDir ./out/kenhoward-dev
+RUN npx tsc --outDir ./out/kenhoward-dev --project tsconfig.prod.json
 
 FROM node:${NODEJS_VERSION}
 ARG VERSION
@@ -22,4 +23,4 @@ COPY package*.json .
 RUN npm ci --only=production
 
 EXPOSE 8080
-CMD ["node", "kenhoward-dev/server.js"]
+CMD ["node", "kenhoward-dev/index.js"]
