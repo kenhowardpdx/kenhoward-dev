@@ -1,4 +1,5 @@
 module.exports = {
+  coverageDirectory: 'reports/jest',
   coverageThreshold: {
     global: {
       branches: 90,
@@ -7,11 +8,13 @@ module.exports = {
       statements: -10
     }
   },
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.test.json'
-    }
-  },
   preset: 'ts-jest',
+  reporters: [
+    'default',
+    ['jest-junit', {
+      outputDirectory: 'reports/jest',
+      outputName: 'results.xml'
+    }]
+  ],
   testEnvironment: 'node'
 }

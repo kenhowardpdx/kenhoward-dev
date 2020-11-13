@@ -1,0 +1,59 @@
+version: 2.1
+jobs:
+  prepare:
+    docker:
+      - image: 'node:14'
+        auth:
+          username: kenhowardpdx
+          password: $DOCKERHUB_PASSWORD
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - run: mkdir -p reports/jest
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  prebuild_checks:
+    docker:
+      - image: 'node:14'
+        auth:
+          username: kenhowardpdx
+          password: $DOCKERHUB_PASSWORD
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Check Code Quality
+          command: npx eslint ./src
+      - run:
+          name: Unit Tests
+          command: npx jest --ci --coverage
+      - store_test_results:
+          path: reports
+  build:
+    docker:
+      - image: 'node:14'
+        auth:
+          username: kenhowardpdx
+          password: $DOCKERHUB_PASSWORD
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build
+          command: npx tsc --noEmit
+ 
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - prepare
+      - prebuild_checks:
+          requires:
+            - prepare
+      - build:
+          requires:
+            - prebuild_checks
