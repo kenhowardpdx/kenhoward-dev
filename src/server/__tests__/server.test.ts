@@ -11,7 +11,7 @@ describe('server', (): void => {
   test('start and stop', async (): Promise<void> => {
     expect.assertions(1)
 
-    const srv = new Server(0, 'template-path-cant-be-empty', mockConsole)
+    const srv = new Server(0, '0.0.0', 'template-path-cant-be-empty', mockConsole)
 
     try {
       await srv.start()

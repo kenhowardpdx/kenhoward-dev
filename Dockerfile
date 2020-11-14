@@ -20,7 +20,8 @@ ENV VERSION ${VERSION}
 WORKDIR ${SERVICE_HOME}
 COPY --from=builder ${SERVICE_HOME}/out .
 COPY package*.json .
+COPY version.txt .
 RUN npm ci --only=production
 
 EXPOSE 8080
-CMD ["node", "kenhoward-dev/index.js"]
+CMD bash -c "node kenhoward-dev/index.js -version $(cat version.txt)"
