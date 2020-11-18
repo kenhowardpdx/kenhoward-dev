@@ -10,14 +10,18 @@ interface server {
   stop: () => Promise<void>
 }
 
+interface Logger {
+  info: (...args: string[]) => void
+}
+
 export default class Server implements server {
-  #logger: Console
+  #logger: Logger
   #server: Hapi.Server
   #routes: Hapi.ServerRoute[] = routes
   #templatesPath: string
   #version: string
 
-  constructor (port: number, version: string, templatesPath: string, logger: Console) {
+  constructor (port: number, version: string, templatesPath: string, logger: Logger) {
     this.#logger = logger
     this.#templatesPath = templatesPath
     this.#version = version
