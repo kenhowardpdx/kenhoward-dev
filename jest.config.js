@@ -1,8 +1,9 @@
 module.exports = {
+  collectCoverageFrom: ['src/**/*.{ts,tsx}'],
   coverageDirectory: 'reports/jest',
   coverageThreshold: {
     global: {
-      branches: 90,
+      branches: 80,
       functions: 90,
       lines: 90,
       statements: -10
