@@ -7,7 +7,7 @@ My personal website
 
 1. Clone the repo
 ```sh
-> git clone git@github.com:kenhowardpdx/kenhoward-dev.git . && cd kenhoward-dev
+> git clone https://github.com/kenhowardpdx/kenhoward-dev.git && cd kenhoward-dev
 ```
 
 2. Ensure your are using Node v14

@@ -10,15 +10,21 @@ interface server {
   stop: () => Promise<void>
 }
 
+interface Logger {
+  info: (...args: string[]) => void
+}
+
 export default class Server implements server {
-  #logger: Console
+  #logger: Logger
   #server: Hapi.Server
   #routes: Hapi.ServerRoute[] = routes
   #templatesPath: string
+  #version: string
 
-  constructor (port: number, templatesPath: string, logger: Console) {
+  constructor (port: number, version: string, templatesPath: string, logger: Logger) {
     this.#logger = logger
     this.#templatesPath = templatesPath
+    this.#version = version
     this.#server = Hapi.server({
       port: port,
       host: '0.0.0.0'
@@ -30,7 +36,7 @@ export default class Server implements server {
     await this.#server.register(Vision)
     this.#server.route(this.#routes)
     this.#server.views({
-      context,
+      context: { ...context, version: this.#version },
       engines: { html: Handlebars },
       layout: 'default',
       layoutPath: `${this.#templatesPath}/layouts`,

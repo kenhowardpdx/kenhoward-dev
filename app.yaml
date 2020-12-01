@@ -1,0 +1,17 @@
+domains:
+- domain: www.kenhoward.dev
+  type: PRIMARY
+name: kenhoward-dev
+region: nyc
+services:
+- image:
+    registry_type: DOCR
+    repository: kenhoward-dev
+    tag: latest
+  build_command: make build
+  http_port: 8080
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: kenhoward-dev
+  routes:
+  - path: /
