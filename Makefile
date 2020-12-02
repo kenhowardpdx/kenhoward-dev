@@ -32,4 +32,4 @@ endif
 	wget https://github.com/digitalocean/doctl/releases/download/v1.52.0/doctl-1.52.0-linux-amd64.tar.gz
 	tar xf doctl-1.52.0-linux-amd64.tar.gz
 	mv doctl ../bin
-	doctl apps list --format ID --no-header -t $DO_TOKEN | xargs doctl apps update --spec app.yaml -t $DO_TOKEN
+	doctl apps list --format ID --no-header -t $(DO_TOKEN) | xargs doctl apps update --spec app.yaml -t $(DO_TOKEN)
