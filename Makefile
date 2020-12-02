@@ -29,7 +29,7 @@ endif
 	docker tag ${IMAGE}:${VERSION} ${REGISTRY}/${IMAGE}:${VERSION}
 	docker push ${REGISTRY}/${IMAGE}:${VERSION}
 	# rolling release - TODO: make this better
-  wget https://github.com/digitalocean/doctl/releases/download/v1.52.0/doctl-1.52.0-linux-amd64.tar.gz
-  tar xf doctl-1.52.0-linux-amd64.tar.gz
-  mv doctl ../bin
-  doctl apps list --format ID --no-header -t $DO_TOKEN | xargs doctl apps update --spec app.yaml -t $DO_TOKEN
+	wget https://github.com/digitalocean/doctl/releases/download/v1.52.0/doctl-1.52.0-linux-amd64.tar.gz
+	tar xf doctl-1.52.0-linux-amd64.tar.gz
+	mv doctl ../bin
+	doctl apps list --format ID --no-header -t $DO_TOKEN | xargs doctl apps update --spec app.yaml -t $DO_TOKEN
