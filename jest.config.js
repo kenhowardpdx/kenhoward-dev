@@ -3,7 +3,7 @@ module.exports = {
   coverageDirectory: 'reports/jest',
   coverageThreshold: {
     global: {
-      branches: 80,
+      branches: 78,
       functions: 90,
       lines: 90,
       statements: -10
