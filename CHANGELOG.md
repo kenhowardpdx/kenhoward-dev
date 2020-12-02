@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/kenhowardpdx/kenhoward-dev/compare/v0.2.1...v0.2.2) (2020-12-02)
+
+
+### Features
+
+* add posts page ([d8ee70b](https://github.com/kenhowardpdx/kenhoward-dev/commit/d8ee70b9ada70f570a3c7468055a95a3a9bb87af))
+
 ### [0.2.1](https://github.com/kenhowardpdx/kenhoward-dev/compare/v0.2.0...v0.2.1) (2020-12-02)
 
 
