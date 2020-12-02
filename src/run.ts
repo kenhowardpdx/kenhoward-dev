@@ -4,14 +4,16 @@ import Server from './server/server'
 import { createShutdownHandler } from './shutdown/shutdown'
 
 const VERSION = process.env.VERSION !== undefined ? process.env.VERSION : '0.0.0'
+const POSTS_PATH = process.env.POSTS_PATH !== undefined ? process.env.POSTS_PATH : ''
 
 const run = async (args: string[]): Promise<void> => {
   try {
     const flags = new FlagSet('kenhoward-dev', args, console)
+    const postsPath = flags.str('postsPath', POSTS_PATH, 'path of posts markdown files')
     const port = flags.int('port', 8080, 'port used for starting the web server')
     const version = flags.str('version', VERSION, 'version for the running program')
     flags.parse()
-    const srv = new Server(port, version, `${__dirname}/templates`, console)
+    const srv = new Server(port, version, `${__dirname}/templates`, postsPath, console)
     const shutdownHandler = createShutdownHandler(srv, console)
     await srv.start()
     // handle shutdown gracefully
