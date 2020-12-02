@@ -10,7 +10,7 @@ describe('handleIndex', (): void => {
     const h: any = {
       view: viewMock
     }
-    const got = handleIndex({} as any, h)
+    const got = handleIndex({} as any, {} as any, h)
 
     expect(viewMock).toHaveBeenCalledWith('index', expect.objectContaining({ title: expect.any(String) }))
     expect(got).toStrictEqual(want)

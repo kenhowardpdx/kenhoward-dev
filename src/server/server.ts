@@ -3,7 +3,7 @@ import Hapi from '@hapi/hapi'
 import Vision from '@hapi/vision'
 
 import context from './context'
-import routes from './routes'
+import configureRoutes from './routes'
 
 interface server {
   start: () => Promise<void>
@@ -14,24 +14,35 @@ interface Logger {
   info: (...args: string[]) => void
 }
 
+interface Options {
+  postsPath: string
+}
+
 export default class Server implements server {
   #logger: Logger
   #server: Hapi.Server
-  #routes: Hapi.ServerRoute[] = routes
+  #routes: Hapi.ServerRoute[]
+  #running = false
   #templatesPath: string
   #version: string
+  options: Options = {
+    postsPath: ''
+  }
 
-  constructor (port: number, version: string, templatesPath: string, logger: Logger) {
+  constructor (port: number, version: string, templatesPath: string, postsPath: string, logger: Logger) {
     this.#logger = logger
+    this.options.postsPath = postsPath
     this.#templatesPath = templatesPath
     this.#version = version
     this.#server = Hapi.server({
       port: port,
       host: '0.0.0.0'
     })
+    this.#routes = configureRoutes(this)
   }
 
   start = async (): Promise<void> => {
+    this.#running = true
     this.#logger.info('starting server')
     await this.#server.register(Vision)
     this.#server.route(this.#routes)
@@ -49,7 +60,10 @@ export default class Server implements server {
   }
 
   stop = async (): Promise<void> => {
-    this.#logger.info('stopping server')
-    await this.#server.stop()
+    if (this.#running) {
+      this.#running = false
+      this.#logger.info('stopping server')
+      await this.#server.stop()
+    }
   }
 }
