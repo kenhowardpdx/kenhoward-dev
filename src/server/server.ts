@@ -29,7 +29,13 @@ export default class Server implements server {
     postsPath: ''
   }
 
-  constructor (port: number, version: string, templatesPath: string, postsPath: string, logger: Logger) {
+  constructor(
+    port: number,
+    version: string,
+    templatesPath: string,
+    postsPath: string,
+    logger: Logger
+  ) {
     this.#logger = logger
     this.options.postsPath = postsPath
     this.#templatesPath = templatesPath

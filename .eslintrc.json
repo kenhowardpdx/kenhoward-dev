@@ -3,10 +3,7 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": [
-    "@typescript-eslint",
-    "jest"
-  ],
+  "plugins": ["@typescript-eslint", "jest"],
   "extends": [
     "standard-with-typescript",
     "eslint:recommended",
@@ -20,6 +17,10 @@
         "fn": "test"
       }
     ],
-    "jest/prefer-expect-assertions": "error"
+    "jest/prefer-expect-assertions": "error",
+    "@typescript-eslint/space-before-function-paren": [
+      "error",
+      { "anonymous": "always", "named": "never", "asyncArrow": "always" }
+    ]
   }
 }

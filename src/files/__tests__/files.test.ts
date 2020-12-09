@@ -4,12 +4,14 @@ describe('files', (): void => {
   describe('fetchFiles', (): void => {
     test('returns hey diddle diddle nursery rhyme', async (): Promise<void> => {
       expect.assertions(1)
-      expect(await fetchFiles('testdata/posts')).toStrictEqual(expect.arrayContaining([
-        {
-          file: expect.any(String),
-          path: 'testdata/posts/2020-12-01-hey-diddle-diddle.md'
-        }
-      ]))
+      expect(await fetchFiles('testdata/posts')).toStrictEqual(
+        expect.arrayContaining([
+          {
+            file: expect.any(String),
+            path: 'testdata/posts/2020-12-01-hey-diddle-diddle.md'
+          }
+        ])
+      )
     })
   })
   describe('fetchFile', (): void => {
@@ -30,14 +32,16 @@ summary: a story about a quick brown fox
 
 This is the story...
 `
-      expect(parseMarkdown(content)).toStrictEqual(expect.arrayContaining([
-        expect.stringContaining('The Quick Brown Fox'),
-        expect.objectContaining({
-          title: 'the quick brown fox',
-          summary: 'a story about a quick brown fox',
-          ref: ''
-        })
-      ]))
+      expect(parseMarkdown(content)).toStrictEqual(
+        expect.arrayContaining([
+          expect.stringContaining('The Quick Brown Fox'),
+          expect.objectContaining({
+            title: 'the quick brown fox',
+            summary: 'a story about a quick brown fox',
+            ref: ''
+          })
+        ])
+      )
     })
   })
 })

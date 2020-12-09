@@ -12,7 +12,10 @@ describe('handleIndex', (): void => {
     }
     const got = handleIndex({} as any, {} as any, h)
 
-    expect(viewMock).toHaveBeenCalledWith('index', expect.objectContaining({ title: expect.any(String) }))
+    expect(viewMock).toHaveBeenCalledWith(
+      'index',
+      expect.objectContaining({ title: expect.any(String) })
+    )
     expect(got).toStrictEqual(want)
   })
 })

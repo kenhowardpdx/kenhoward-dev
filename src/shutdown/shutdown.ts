@@ -6,9 +6,17 @@ interface Logger {
   error: (...args: string[]) => void
 }
 
-type ShutdownHandler = (exitCode: number, reason: string) => (err: Error) => void
+type ShutdownHandler = (
+  exitCode: number,
+  reason: string
+) => (err: Error) => void
 
-export const createShutdownHandler = (server: Server, logger: Logger, timeout = 500, preventExit = false): ShutdownHandler => {
+export const createShutdownHandler = (
+  server: Server,
+  logger: Logger,
+  timeout = 500,
+  preventExit = false
+): ShutdownHandler => {
   /* istanbul ignore next - cannot use in testing environment */
   const exit = (exitCode: number): void => {
     if (preventExit) {

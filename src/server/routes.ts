@@ -5,8 +5,21 @@ import handleIndex from './handle_index'
 import handlePosts from './handle_posts'
 import handlePost from './handle_post'
 
-const defineRoute = (server: Server, handler: (server: Server, req: Hapi.Request, h: Hapi.ResponseToolkit) => Hapi.ResponseObject | Promise<Hapi.ResponseObject>, method: string, path: string): Hapi.ServerRoute => {
-  const serverHandler: Hapi.Lifecycle.Method = (req: Hapi.Request, h: Hapi.ResponseToolkit): Hapi.ResponseObject | Promise<Hapi.ResponseObject> => handler(server, req, h)
+const defineRoute = (
+  server: Server,
+  handler: (
+    server: Server,
+    req: Hapi.Request,
+    h: Hapi.ResponseToolkit
+  ) => Hapi.ResponseObject | Promise<Hapi.ResponseObject>,
+  method: string,
+  path: string
+): Hapi.ServerRoute => {
+  const serverHandler: Hapi.Lifecycle.Method = (
+    req: Hapi.Request,
+    h: Hapi.ResponseToolkit
+  ): Hapi.ResponseObject | Promise<Hapi.ResponseObject> =>
+    handler(server, req, h)
   return {
     handler: serverHandler,
     method,
