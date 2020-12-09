@@ -14,7 +14,7 @@ export default class FlagSet {
   #name: string
   #flags: { [flag: string]: Flag } = {}
 
-  constructor (name: string, args: string[], logger: Logger) {
+  constructor(name: string, args: string[], logger: Logger) {
     this.#args = args
     this.#logger = logger
     this.#name = name
@@ -36,10 +36,11 @@ export default class FlagSet {
   }
 
   #printHelp = (undefinedArgs?: string): void => {
-    const unknownOptions = undefinedArgs !== undefined ? 'Unknown Options: \n' + undefinedArgs + '\n' : ''
-    let helpMsg = this.#name + '\n' +
-    unknownOptions +
-    'Options: \n'
+    const unknownOptions =
+      undefinedArgs !== undefined
+        ? 'Unknown Options: \n' + undefinedArgs + '\n'
+        : ''
+    let helpMsg = this.#name + '\n' + unknownOptions + 'Options: \n'
 
     for (const flag in this.#flags) {
       if (Object.prototype.hasOwnProperty.call(this.#flags, flag)) {
@@ -84,8 +85,8 @@ export default class FlagSet {
           continue
         } else if (this.#args[i - 1] !== undefined) {
           // is previous arg a flag?
-          k = (this.#args[i - 1].indexOf('-') === 0) ? this.#args[i - 1] : v
-          v = (k !== v) ? v : 'true'
+          k = this.#args[i - 1].indexOf('-') === 0 ? this.#args[i - 1] : v
+          v = k !== v ? v : 'true'
         }
         flagMap.set(k, v)
       }
@@ -97,11 +98,14 @@ export default class FlagSet {
       })
 
       if (flagMap.size > 0) {
-        const undefinedArgs: string = Array.from(flagMap).reduce((c, t): string => {
-          const key = t[0]
-          const val = t[1]
-          return `${c}  "${key}" => "${val}"\n`
-        }, '')
+        const undefinedArgs: string = Array.from(flagMap).reduce(
+          (c, t): string => {
+            const key = t[0]
+            const val = t[1]
+            return `${c}  "${key}" => "${val}"\n`
+          },
+          ''
+        )
         this.#printHelp(undefinedArgs)
         /* istanbul ignore next */
         if (exitProcess) {

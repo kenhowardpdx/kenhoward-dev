@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import handlePosts from '../handle_posts'
+import handlePost from '../handle_post'
 
-describe('handlePosts', (): void => {
+describe('handlePost', (): void => {
   test('returns view', async (): Promise<void> => {
     expect.assertions(2)
 
@@ -13,19 +13,17 @@ describe('handlePosts', (): void => {
     const options = {
       postsPath: 'testdata/posts'
     }
-    const got = await handlePosts({ options } as any, {} as any, h)
+    const got = await handlePost(
+      { options } as any,
+      { url: { pathname: '/posts/2020/12/01/hey-diddle-diddle' } } as any,
+      h
+    )
 
     expect(viewMock).toHaveBeenCalledWith(
-      'posts',
+      'post',
       expect.objectContaining({
-        title: expect.stringContaining('Posts'),
-        posts: expect.arrayContaining([
-          expect.objectContaining({
-            summary: expect.any(String),
-            title: expect.any(String),
-            url: expect.stringMatching(/^\/posts\/[a-z0-9-/]*$/)
-          })
-        ])
+        body: expect.any(String),
+        title: 'Hey Diddle Diddle'
       })
     )
     expect(got).toStrictEqual(want)

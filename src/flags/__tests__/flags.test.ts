@@ -6,7 +6,8 @@ describe('flags', (): void => {
     test('prints help when -help flag encountered', (): void => {
       expect.assertions(1)
 
-      const want = 'test\nOptions: \n\t-foo\tfoo is great - (default: <string> great)'
+      const want =
+        'test\nOptions: \n\t-foo\tfoo is great - (default: <string> great)'
       const logger = {
         log: jest.fn() as any
       }
@@ -25,7 +26,11 @@ describe('flags', (): void => {
         log: jest.fn() as any
       }
 
-      const flags = new FlagSet('test', ['-undefined', '-nope', 'false', 'not-defined'], logger)
+      const flags = new FlagSet(
+        'test',
+        ['-undefined', '-nope', 'false', 'not-defined'],
+        logger
+      )
       flags.str('defined', 'sure is', 'this is a defined flag')
       flags.parse(false)
 

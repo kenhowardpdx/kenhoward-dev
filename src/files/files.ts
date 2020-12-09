@@ -5,7 +5,8 @@ import yaml from 'yamljs'
 
 const S3_ACCESS_KEY_ID = process.env.S3_ACCESS_KEY_ID
 const S3_ACCESS_KEY_SECRET = process.env.S3_ACCESS_KEY_SECRET
-const S3_ENDPOINT = process.env.S3_ENDPOINT !== undefined ? process.env.S3_ENDPOINT : ''
+const S3_ENDPOINT =
+  process.env.S3_ENDPOINT !== undefined ? process.env.S3_ENDPOINT : ''
 
 const s3Endpoint = new aws.Endpoint(S3_ENDPOINT)
 const s3 = new aws.S3({
@@ -22,7 +23,7 @@ const fetchFiles = async (dir: string): Promise<File[]> => {
   let files: File[] = []
   /* istanbul ignore if */
   if (dir.startsWith('s3://')) {
-    files = [...files, ...await fetchFilesFromS3(dir)]
+    files = [...files, ...(await fetchFilesFromS3(dir))]
   } else {
     files = [...files, ...fetchFilesFromDisk(dir)]
   }
@@ -50,17 +51,21 @@ const fetchFilesFromS3 = async (dir: string): Promise<File[]> => {
       }
       const { Contents: list } = data
       if (list !== undefined && list.length > 0) {
-        const f = list.map(async (obj: aws.S3.Object): Promise<File> => {
-          // TODO: shouldn't be undefined but whatever
-          const fileName = obj.Key !== undefined ? obj.Key : ''
-          const filePath = `${dir}/${fileName}`
-          return await fetchFileFromS3(filePath).then((file: string): File => {
-            return {
-              file,
-              path: filePath
-            }
-          })
-        })
+        const f = list.map(
+          async (obj: aws.S3.Object): Promise<File> => {
+            // TODO: shouldn't be undefined but whatever
+            const fileName = obj.Key !== undefined ? obj.Key : ''
+            const filePath = `${dir}/${fileName}`
+            return await fetchFileFromS3(filePath).then(
+              (file: string): File => {
+                return {
+                  file,
+                  path: filePath
+                }
+              }
+            )
+          }
+        )
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         Promise.all(f).then((files: File[]): void => {
           resolve(files)
@@ -95,14 +100,16 @@ const fetchFileFromS3 = async (filePath: string): Promise<string> => {
 
 const fetchFilesFromDisk = (dir: string): File[] => {
   const files = fs.readdirSync(dir, { encoding: 'utf8' })
-  return files.map((fileName: string): File => {
-    const filePath = `${dir}/${fileName}`
-    const file = fetchFileFromDisk(filePath)
-    return {
-      file,
-      path: filePath
+  return files.map(
+    (fileName: string): File => {
+      const filePath = `${dir}/${fileName}`
+      const file = fetchFileFromDisk(filePath)
+      return {
+        file,
+        path: filePath
+      }
     }
-  })
+  )
 }
 
 const fetchFileFromDisk = (filePath: string): string => {
@@ -126,7 +133,7 @@ const parseMarkdown = (content: string): [Body, Metadata] => {
   }
   /* istanbul ignore else */
   if (hasMetadata) {
-    const [,rawMetadata, rawBody] = content.split('---')
+    const [, rawMetadata, rawBody] = content.split('---')
     const m = yaml.parse(rawMetadata) as { [k: string]: string | undefined }
     metadata.title = m.title !== undefined ? m.title : metadata.title
     metadata.summary = m.summary !== undefined ? m.summary : metadata.summary

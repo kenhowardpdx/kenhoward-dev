@@ -21,6 +21,9 @@ jobs:
           name: Check Code Quality
           command: npx eslint ./src
       - run:
+          name: Code Style Check
+          command: npx prettier --check src
+      - run:
           name: Unit Tests
           command: npx jest --ci --coverage
       - store_test_results:

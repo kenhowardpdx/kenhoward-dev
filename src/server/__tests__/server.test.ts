@@ -12,7 +12,13 @@ describe('server', (): void => {
     expect.assertions(1)
     const postsPath = 'testdata/posts'
 
-    const srv = new Server(0, '0.0.0', 'template-path-cant-be-empty', postsPath, mockConsole)
+    const srv = new Server(
+      0,
+      '0.0.0',
+      'template-path-cant-be-empty',
+      postsPath,
+      mockConsole
+    )
 
     try {
       await srv.start()
