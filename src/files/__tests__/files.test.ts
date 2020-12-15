@@ -2,16 +2,31 @@ import { fetchFiles, fetchFile, parseMarkdown } from '../files'
 
 describe('files', (): void => {
   describe('fetchFiles', (): void => {
-    test('returns hey diddle diddle nursery rhyme', async (): Promise<void> => {
+    test('returns nursery rhymes in ascending order (newest to oldest)[default]', async (): Promise<void> => {
       expect.assertions(1)
-      expect(await fetchFiles('testdata/posts')).toStrictEqual(
-        expect.arrayContaining([
-          {
-            file: expect.any(String),
-            path: 'testdata/posts/2020-12-01-hey-diddle-diddle.md'
-          }
-        ])
-      )
+      expect(await fetchFiles('testdata/posts')).toStrictEqual([
+        {
+          file: expect.any(String),
+          path: 'testdata/posts/2020-12-14-little-bo-peep.md'
+        },
+        {
+          file: expect.any(String),
+          path: 'testdata/posts/2020-12-01-hey-diddle-diddle.md'
+        }
+      ])
+    })
+    test('returns nursery rhymes in descending order (oldest to newest)', async (): Promise<void> => {
+      expect.assertions(1)
+      expect(
+        await fetchFiles('testdata/posts', undefined, 'desc')
+      ).toStrictEqual([
+        expect.objectContaining({
+          path: 'testdata/posts/2020-12-01-hey-diddle-diddle.md'
+        }),
+        expect.objectContaining({
+          path: 'testdata/posts/2020-12-14-little-bo-peep.md'
+        })
+      ])
     })
   })
   describe('fetchFile', (): void => {

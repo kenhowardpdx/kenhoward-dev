@@ -15,6 +15,7 @@ interface Logger {
 }
 
 interface Options {
+  pagesPath: string
   postsPath: string
 }
 
@@ -24,8 +25,9 @@ export default class Server implements server {
   #routes: Hapi.ServerRoute[]
   #running = false
   #templatesPath: string
-  #version: string
+  version: string
   options: Options = {
+    pagesPath: '',
     postsPath: ''
   }
 
@@ -33,13 +35,15 @@ export default class Server implements server {
     port: number,
     version: string,
     templatesPath: string,
+    pagesPath: string,
     postsPath: string,
     logger: Logger
   ) {
     this.#logger = logger
+    this.options.pagesPath = pagesPath
     this.options.postsPath = postsPath
     this.#templatesPath = templatesPath
-    this.#version = version
+    this.version = version
     this.#server = Hapi.server({
       port: port,
       host: '0.0.0.0'
@@ -53,10 +57,11 @@ export default class Server implements server {
     await this.#server.register(Vision)
     this.#server.route(this.#routes)
     this.#server.views({
-      context: { ...context, version: this.#version },
+      context: { ...context, version: this.version },
       engines: { html: Handlebars },
       layout: 'default',
       layoutPath: `${this.#templatesPath}/layouts`,
+      partialsPath: `${this.#templatesPath}/partials`,
       path: `${this.#templatesPath}`,
       relativeTo: __dirname
     })

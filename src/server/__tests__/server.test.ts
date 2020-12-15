@@ -10,12 +10,14 @@ const mockConsole: Console = {
 describe('server', (): void => {
   test('start and stop', async (): Promise<void> => {
     expect.assertions(1)
+    const pagesPath = 'testdata/pages'
     const postsPath = 'testdata/posts'
 
     const srv = new Server(
       0,
       '0.0.0',
-      'template-path-cant-be-empty',
+      '../templates',
+      pagesPath,
       postsPath,
       mockConsole
     )

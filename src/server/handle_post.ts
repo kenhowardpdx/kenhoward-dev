@@ -23,7 +23,7 @@ const handlePost = async (
   h: Hapi.ResponseToolkit
 ): Promise<Hapi.ResponseObject> => {
   const postPath = getPostPathFromUrl(
-    request.url.pathname,
+    request.path,
     server.options.postsPath,
     '/posts'
   )
