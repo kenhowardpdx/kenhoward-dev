@@ -15,6 +15,29 @@ const s3 = new aws.S3({
   secretAccessKey: S3_ACCESS_KEY_SECRET
 })
 
+/* istanbul ignore next */
+const wrapError = (message: string, err: unknown): Error => {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const originalError = {
+    message:
+      typeof err === 'object' &&
+      err !== null &&
+      (err as any).message !== undefined
+        ? ((err as any).message as string)
+        : 'unknown',
+    stack:
+      typeof err === 'object' &&
+      err !== null &&
+      (err as any).stack !== undefined
+        ? ((err as any).stack as string)
+        : ''
+  }
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+  const error = new Error(`${message} ${originalError.message}`)
+  error.stack = (error.stack as string) + originalError.stack
+  return error
+}
+
 interface File {
   file: string
   path: string
@@ -45,61 +68,38 @@ const fetchFile = async (filePath: string): Promise<string> => {
 
 /* istanbul ignore next */
 const fetchFilesFromS3 = async (dir: string): Promise<File[]> => {
+  const files = []
   const [bucket, ...segments] = dir.slice('s3://'.length).split('/')
   const path = segments.join('/')
-  return await new Promise((resolve, reject): void => {
-    s3.listObjects({ Bucket: bucket, Prefix: path }, (err, data): void => {
-      if (err !== undefined && err !== null) {
-        reject(err)
-        return
-      }
-      const { Contents: list } = data
-      if (list !== undefined && list.length > 0) {
-        const f = list.map(
-          async (obj: aws.S3.Object): Promise<File> => {
-            // TODO: shouldn't be undefined but whatever
-            const fileName = obj.Key !== undefined ? obj.Key : ''
-            const filePath = `${dir}/${fileName}`
-            return await fetchFileFromS3(filePath).then(
-              (file: string): File => {
-                return {
-                  file,
-                  path: filePath
-                }
-              }
-            )
-          }
-        )
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        Promise.all(f).then((files: File[]): void => {
-          resolve(files)
-        })
-      } else {
-        resolve([])
-      }
-    })
-  })
+  const data = await s3.listObjects({ Bucket: bucket, Prefix: path }).promise()
+  const { Contents: list } = data
+  if (list !== undefined && list.length > 0) {
+    for (const obj of list) {
+      const fileName = obj.Key !== undefined ? obj.Key : ''
+      const filePath = `s3://${bucket}/${fileName}`
+      const file = await fetchFileFromS3(filePath)
+      files.push({ file, path: filePath })
+    }
+  }
+  return files
 }
 
 /* istanbul ignore next */
 const fetchFileFromS3 = async (filePath: string): Promise<string> => {
-  const [bucket, ...segments] = filePath.slice('s3://'.length).split('/')
-  const path = segments.join('/')
-  return await new Promise((resolve, reject): void => {
-    s3.getObject({ Bucket: bucket, Key: path }, (err, data): void => {
-      if (err !== undefined && err !== null) {
-        reject(err)
-        return
-      }
-      let body = ''
-      const { Body } = data
-      if (Body !== undefined) {
-        // eslint-disable-next-line @typescript-eslint/no-base-to-string
-        body = Body.toString('utf8')
-      }
-      resolve(body)
-    })
-  })
+  try {
+    let body = ''
+    const [bucket, ...segments] = filePath.slice('s3://'.length).split('/')
+    const path = segments.join('/')
+    const data = await s3.getObject({ Bucket: bucket, Key: path }).promise()
+    const { Body } = data
+    if (Body !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string
+      body = Body.toString('utf8')
+    }
+    return body
+  } catch (err) {
+    throw wrapError(`could not fetch file '${filePath}':`, err)
+  }
 }
 
 const fetchFilesFromDisk = (dir: string): File[] => {

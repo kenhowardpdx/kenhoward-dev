@@ -11,7 +11,7 @@ describe('handlePages', (): void => {
       view: viewMock
     }
     const options = {
-      pagesPath: 'testdata/pages'
+      dataPath: 'testdata'
     }
     const got = await handlePages(
       { options } as any,

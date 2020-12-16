@@ -10,17 +10,9 @@ const mockConsole: Console = {
 describe('server', (): void => {
   test('start and stop', async (): Promise<void> => {
     expect.assertions(1)
-    const pagesPath = 'testdata/pages'
-    const postsPath = 'testdata/posts'
+    const dataPath = 'testdata'
 
-    const srv = new Server(
-      0,
-      '0.0.0',
-      '../templates',
-      pagesPath,
-      postsPath,
-      mockConsole
-    )
+    const srv = new Server(0, '0.0.0', '../templates', dataPath, mockConsole)
 
     try {
       await srv.start()

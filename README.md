@@ -35,5 +35,5 @@ My personal website
 ## Run locally
 
 ```sh
-> npx ts-node src/index.ts -postsPath testdata/posts -pagesPath testdata/pages
+> npx ts-node src/index.ts -dataPath testdata
 ```

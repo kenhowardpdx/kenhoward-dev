@@ -13,11 +13,12 @@ const handleIndex = async (
   const title = 'Home'
   const max = 1
   const order = 'asc'
-  const postFiles = await fetchFiles(server.options.postsPath, max, order)
+  const postsPath = `${server.options.dataPath}/posts`
+  const postFiles = await fetchFiles(postsPath, max, order)
   const posts = postFiles.map(
     ({ file, path }): PostDetail => {
       const [, m] = parseMarkdown(file)
-      const url = getPostUrlFromPath(path, server.options.postsPath, '/posts')
+      const url = getPostUrlFromPath(path, postsPath, '/posts')
       return {
         summary: m.summary,
         title: m.title,

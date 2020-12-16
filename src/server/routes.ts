@@ -17,11 +17,20 @@ const defineRoute = (
   method: string,
   path: string
 ): Hapi.ServerRoute => {
-  const serverHandler: Hapi.Lifecycle.Method = (
+  const serverHandler: Hapi.Lifecycle.Method = async (
     req: Hapi.Request,
     h: Hapi.ResponseToolkit
-  ): Hapi.ResponseObject | Promise<Hapi.ResponseObject> =>
-    handler(server, req, h)
+  ): Promise<Hapi.ResponseObject> => {
+    try {
+      const view = await handler(server, req, h)
+      return view
+    } catch (err) {
+      console.error(`error handling path: ${path}: `, err)
+      return h
+        .view('internal-error', { title: 'Internal Server Error' })
+        .code(500)
+    }
+  }
   return {
     handler: serverHandler,
     method,
