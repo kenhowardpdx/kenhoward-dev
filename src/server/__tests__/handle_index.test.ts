@@ -8,7 +8,7 @@ describe('handleIndex', (): void => {
     const want = expect.any(Object)
     const viewMock = jest.fn((): any => ({}))
     const options = {
-      postsPath: 'testdata/posts'
+      dataPath: 'testdata'
     }
     const h: any = {
       view: viewMock

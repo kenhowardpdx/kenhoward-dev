@@ -22,11 +22,8 @@ const handlePost = async (
   request: Hapi.Request,
   h: Hapi.ResponseToolkit
 ): Promise<Hapi.ResponseObject> => {
-  const postPath = getPostPathFromUrl(
-    request.path,
-    server.options.postsPath,
-    '/posts'
-  )
+  const postsPath = `${server.options.dataPath}/posts`
+  const postPath = getPostPathFromUrl(request.path, postsPath, '/posts')
   const file = await fetchFile(postPath)
   const [body, m] = parseMarkdown(file)
   const { title } = m

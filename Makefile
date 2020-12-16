@@ -1,18 +1,26 @@
 .PHONY: \
+	prebuild_checks \
 	build \
 	clean \
 	deploy \
 
 APP           := kenhoward-dev
+APP_ENV       := ${APP}-test
 GIT_COMMIT    := $(shell git rev-parse --short HEAD)
 IMAGE         := kenhoward-dev
 REGISTRY      := registry.digitalocean.com/kenhowardpdx
 VERSION       := ${GIT_COMMIT}
 WARNING       := only circleci should run this
 
-ifeq ($(CIRCLECI),true)
-	VERSION  = v$(shell cat version.txt | tr -d "\n")
+ifeq ($(CIRCLE_BRANCH),main)
+	APP_ENV = ${APP}
+	VERSION = v$(shell cat version.txt | tr -d "\n")
 endif
+
+prebuild_checks:
+	npx jest --ci --coverage
+	npx eslint ./src
+	npx tsc --noEmit
 
 build:
 	docker build --build-arg VERSION=${VERSION} -t ${IMAGE}:${VERSION} .
@@ -28,9 +36,5 @@ ifeq ($(CIRCLE_BRANCH),main)
 endif
 	docker tag ${IMAGE}:${VERSION} ${REGISTRY}/${IMAGE}:${VERSION}
 	docker push ${REGISTRY}/${IMAGE}:${VERSION}
-	# rolling release - TODO: make this better
-	wget https://github.com/digitalocean/doctl/releases/download/v1.52.0/doctl-1.52.0-linux-amd64.tar.gz
-	tar xf doctl-1.52.0-linux-amd64.tar.gz
-	mv doctl ../bin
-	doctl apps list --format ID --no-header -t $(DO_TOKEN) | xargs doctl apps spec get -t $(DO_TOKEN) > app.yaml
-	doctl apps list --format ID --no-header -t $(DO_TOKEN) | xargs doctl apps update --spec app.yaml -t $(DO_TOKEN)
+	# rolling release
+	bin/deploy --version ${VERSION} --token $(DO_TOKEN) --app ${APP_ENV}

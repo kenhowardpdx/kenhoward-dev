@@ -50,6 +50,8 @@ workflows:
             - kenhoward-dev
           filters:
             branches:
-              only: main
+              only:
+                - main
+                - develop
           requires:
             - prebuild_checks

@@ -11,7 +11,7 @@ describe('handlePosts', (): void => {
       view: viewMock
     }
     const options = {
-      postsPath: 'testdata/posts'
+      dataPath: 'testdata'
     }
     const got = await handlePosts({ options } as any, {} as any, h)
 

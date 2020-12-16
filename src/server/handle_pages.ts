@@ -10,15 +10,21 @@ const handlePages = async (
   h: Hapi.ResponseToolkit
 ): Promise<Hapi.ResponseObject> => {
   try {
-    const pagePath = `${server.options.pagesPath}/${request.path.slice(1)}.md`
+    const pagePath = `${server.options.dataPath}/pages/${request.path.slice(
+      1
+    )}.md`
     const file = await fetchFile(pagePath)
     const [body, m] = parseMarkdown(file)
     const { title } = m
 
     return h.view(template, { title, body })
   } catch (err) {
-    console.error(err)
-    return h.response().code(500)
+    if (typeof err === 'object' && err !== null && err.message !== undefined) {
+      if ((err.message as string).includes('could not')) {
+        return h.view('not-found', {})
+      }
+    }
+    throw err
   }
 }
 

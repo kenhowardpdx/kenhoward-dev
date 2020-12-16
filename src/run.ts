@@ -5,22 +5,15 @@ import { createShutdownHandler } from './shutdown/shutdown'
 
 const VERSION =
   process.env.VERSION !== undefined ? process.env.VERSION : '0.0.0'
-const PAGES_PATH =
-  process.env.PAGES_PATH !== undefined ? process.env.PAGES_PATH : ''
-const POSTS_PATH =
-  process.env.POSTS_PATH !== undefined ? process.env.POSTS_PATH : ''
+const DATA_PATH =
+  process.env.DATA_PATH !== undefined ? process.env.DATA_PATH : ''
 
 const run = async (args: string[]): Promise<void> => {
   try {
     const flags = new FlagSet('kenhoward-dev', args, console)
-    const pagesPath = flags.str(
-      'pagesPath',
-      PAGES_PATH,
-      'path of pages markdown files'
-    )
-    const postsPath = flags.str(
-      'postsPath',
-      POSTS_PATH,
+    const dataPath = flags.str(
+      'dataPath',
+      DATA_PATH,
       'path of posts markdown files'
     )
     const port = flags.int(
@@ -38,8 +31,7 @@ const run = async (args: string[]): Promise<void> => {
       port,
       version,
       `${__dirname}/templates`,
-      pagesPath,
-      postsPath,
+      dataPath,
       console
     )
     const shutdownHandler = createShutdownHandler(srv, console)

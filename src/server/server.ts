@@ -15,8 +15,7 @@ interface Logger {
 }
 
 interface Options {
-  pagesPath: string
-  postsPath: string
+  dataPath: string
 }
 
 export default class Server implements server {
@@ -27,21 +26,18 @@ export default class Server implements server {
   #templatesPath: string
   version: string
   options: Options = {
-    pagesPath: '',
-    postsPath: ''
+    dataPath: ''
   }
 
   constructor(
     port: number,
     version: string,
     templatesPath: string,
-    pagesPath: string,
-    postsPath: string,
+    dataPath: string,
     logger: Logger
   ) {
     this.#logger = logger
-    this.options.pagesPath = pagesPath
-    this.options.postsPath = postsPath
+    this.options.dataPath = dataPath
     this.#templatesPath = templatesPath
     this.version = version
     this.#server = Hapi.server({

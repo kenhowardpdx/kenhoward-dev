@@ -1,0 +1,43 @@
+#!/usr/bin/env perl
+
+use 5.018;
+use strict;
+use warnings;
+
+use Getopt::Long;
+
+my $APP_NAME;
+my $AUTH_TOKEN;
+my $VERSION;
+my $yamlfile = 'app.yaml';
+
+GetOptions(
+  "app=s"        => \$APP_NAME,
+  "token=s"      => \$AUTH_TOKEN,
+  "version=s"    => \$VERSION,
+) or die("Error in command line arguments\n");
+
+system("wget https://github.com/digitalocean/doctl/releases/download/v1.52.0/doctl-1.52.0-linux-amd64.tar.gz") == 0
+  or die "command failed: $?";
+
+system("tar xf doctl-1.52.0-linux-amd64.tar.gz") == 0
+  or die "command failed: $?";
+
+system("mv doctl ../bin") == 0
+  or die "command failed: $?";
+
+system("doctl apps list --format ID,Spec.Name --no-header -t ${AUTH_TOKEN} | grep '${APP_NAME}\$' | xargs doctl apps spec get -t ${AUTH_TOKEN} > ${yamlfile}") == 0
+  or die "command failed: $?";
+
+open my $fh_in, '<', $yamlfile or die "could not open file '$yamlfile': $!\n";
+my $file_content = do { local $/; <$fh_in> };
+close $fh_in or die "could not close file '$yamlfile': $!\n";
+
+$file_content =~ s/(tag:\s)(.*)(\n)/$1${VERSION}$3/;
+
+open my $fh_out, '>', $yamlfile or die "could not open file '$yamlfile': $!\n";
+print {$fh_out} $file_content;
+close $fh_out or die "could not close file '$yamlfile': $!\n";
+
+system("doctl apps list --format ID,Spec.Name --no-header -t ${AUTH_TOKEN} | grep '${APP_NAME}\$' | xargs doctl apps update --spec app.yaml -t ${AUTH_TOKEN}") == 0
+  or die "command failed: $?";
