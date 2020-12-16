@@ -27,9 +27,13 @@ My personal website
 
 5. Start coding
 
+6. Check formatting
+```sh
+> npx prettier --write src
+```
 
 ## Run locally
 
 ```sh
-> npx ts-node src/server.ts
+> npx ts-node src/index.ts -postsPath testdata/posts -pagesPath testdata/pages
 ```

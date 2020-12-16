@@ -19,7 +19,11 @@ interface File {
   file: string
   path: string
 }
-const fetchFiles = async (dir: string): Promise<File[]> => {
+const fetchFiles = async (
+  dir: string,
+  max = 0,
+  order: 'asc' | 'desc' = 'asc'
+): Promise<File[]> => {
   let files: File[] = []
   /* istanbul ignore if */
   if (dir.startsWith('s3://')) {
@@ -27,7 +31,7 @@ const fetchFiles = async (dir: string): Promise<File[]> => {
   } else {
     files = [...files, ...fetchFilesFromDisk(dir)]
   }
-  return files
+  return trimList(reOrderFiles(files, order), max)
 }
 
 const fetchFile = async (filePath: string): Promise<string> => {
@@ -144,6 +148,36 @@ const parseMarkdown = (content: string): [Body, Metadata] => {
   }
 
   return [body, metadata]
+}
+
+const trimList = <T>(list: T[], max: number): T[] => {
+  const newList = [...list]
+  if (max === 0 || newList.length <= max) {
+    return newList
+  }
+  return newList.slice(0, max)
+}
+
+const reOrderFiles = (list: File[], order: 'asc' | 'desc'): File[] => {
+  const newList = [...list]
+  newList.sort((a: File, b: File): number => {
+    let thingA = a
+    let thingB = b
+    if (order === 'asc') {
+      thingA = b
+      thingB = a
+    }
+    const stringA = thingA.path.toLowerCase()
+    const stringB = thingB.path.toLowerCase()
+    if (stringA < stringB) {
+      return -1
+    }
+    if (stringA > stringB) {
+      return 1
+    }
+    return 0
+  })
+  return newList
 }
 
 export { fetchFiles, fetchFile, parseMarkdown }
