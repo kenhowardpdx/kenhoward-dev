@@ -30,8 +30,9 @@ const run = async (args: string[]): Promise<void> => {
     const srv = new Server(
       port,
       version,
-      `${__dirname}/templates`,
+      `${__dirname}/css`,
       dataPath,
+      `${__dirname}/templates`,
       console
     )
     const shutdownHandler = createShutdownHandler(srv, console)

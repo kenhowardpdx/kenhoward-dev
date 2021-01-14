@@ -12,7 +12,14 @@ describe('server', (): void => {
     expect.assertions(1)
     const dataPath = 'testdata'
 
-    const srv = new Server(0, '0.0.0', '../templates', dataPath, mockConsole)
+    const srv = new Server(
+      0,
+      '0.0.0',
+      '../css',
+      dataPath,
+      '../templates',
+      mockConsole
+    )
 
     try {
       await srv.start()

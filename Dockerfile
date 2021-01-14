@@ -7,6 +7,7 @@ WORKDIR ${SERVICE_HOME}
 COPY package*.json ./
 COPY ./src ./src
 COPY ./src/templates ./out/templates
+COPY ./src/css ./out/css
 COPY tsconfig.prod.json .
 # install dependencies
 RUN npm install

@@ -1,0 +1,4 @@
+body {
+  /* force footer to bottom of view port */
+  min-height: 75rem;
+}

@@ -20,7 +20,10 @@ const handlePages = async (
     return h.view(template, { title, body })
   } catch (err) {
     if (typeof err === 'object' && err !== null && err.message !== undefined) {
-      if ((err.message as string).includes('could not')) {
+      if (
+        (err.message as string).includes('could not') ||
+        (err.message as string).includes('no such file')
+      ) {
         return h.view('not-found', {})
       }
     }

@@ -1,8 +1,10 @@
-<h1>Posts</h1>
+<main class="container">
+  <h1>Posts</h1>
 
-<div id="posts">
-  {{#each posts}}
-  <h3 class="post-title"><a href="{{url}}">{{title}}</a></h3>
-  <p class="post-summary">{{summary}}</p>
-  {{/each}}
-</div>
+  <div id="posts">
+    {{#each posts}}
+    <h3 class="post-title"><a href="{{url}}">{{title}}</a></h3>
+    <p class="post-summary">{{summary}}</p>
+    {{/each}}
+  </div>
+</main>

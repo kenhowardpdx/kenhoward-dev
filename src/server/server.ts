@@ -1,9 +1,10 @@
 import Handlebars from 'handlebars'
 import Hapi from '@hapi/hapi'
+import Inert from '@hapi/inert'
 import Vision from '@hapi/vision'
 
 import context from './context'
-import configureRoutes from './routes'
+import { configureRoutes, configureStaticRoutes } from './routes'
 
 interface server {
   start: () => Promise<void>
@@ -15,7 +16,9 @@ interface Logger {
 }
 
 interface Options {
+  cssPath: string
   dataPath: string
+  templatesPath: string
 }
 
 export default class Server implements server {
@@ -23,42 +26,46 @@ export default class Server implements server {
   #server: Hapi.Server
   #routes: Hapi.ServerRoute[]
   #running = false
-  #templatesPath: string
   version: string
   options: Options = {
-    dataPath: ''
+    cssPath: '',
+    dataPath: '',
+    templatesPath: ''
   }
 
   constructor(
     port: number,
     version: string,
-    templatesPath: string,
+    cssPath: string,
     dataPath: string,
+    templatesPath: string,
     logger: Logger
   ) {
     this.#logger = logger
+    this.options.cssPath = cssPath
     this.options.dataPath = dataPath
-    this.#templatesPath = templatesPath
+    this.options.templatesPath = templatesPath
     this.version = version
     this.#server = Hapi.server({
       port: port,
       host: '0.0.0.0'
     })
-    this.#routes = configureRoutes(this)
+    this.#routes = [...configureStaticRoutes(this), ...configureRoutes(this)]
   }
 
   start = async (): Promise<void> => {
     this.#running = true
     this.#logger.info('starting server')
     await this.#server.register(Vision)
+    await this.#server.register(Inert)
     this.#server.route(this.#routes)
     this.#server.views({
       context: { ...context, version: this.version },
       engines: { html: Handlebars },
       layout: 'default',
-      layoutPath: `${this.#templatesPath}/layouts`,
-      partialsPath: `${this.#templatesPath}/partials`,
-      path: `${this.#templatesPath}`,
+      layoutPath: `${this.options.templatesPath}/layouts`,
+      partialsPath: `${this.options.templatesPath}/partials`,
+      path: `${this.options.templatesPath}`,
       relativeTo: __dirname
     })
 

@@ -1,8 +1,9 @@
 <html>
   <head>
     <title>{{title}} - {{siteName}}</title>
+    {{> styles}}
   </head>
-  <body>
+  <body class="d-flex flex-column h-100">
     {{> header}} {{{content}}} {{> footer}}
   </body>
 </html>
