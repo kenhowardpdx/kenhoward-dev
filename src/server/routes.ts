@@ -49,4 +49,17 @@ const configureRoutes = (server: Server): Hapi.ServerRoute[] => {
   ]
 }
 
-export default configureRoutes
+const configureStaticRoutes = (server: Server): Hapi.ServerRoute[] => {
+  const cssRoute = {
+    method: 'GET',
+    path: '/css/{param*}',
+    handler: {
+      directory: {
+        path: server.options.cssPath
+      }
+    }
+  }
+  return [cssRoute]
+}
+
+export { configureRoutes, configureStaticRoutes }

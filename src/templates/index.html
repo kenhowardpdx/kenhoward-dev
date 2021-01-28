@@ -1,11 +1,15 @@
-<h1>{{title}}</h1>
-<p>This site is currently under development.</p>
+<main class="container">
+  <div class="bg-light p-5 rounded">
+    <h1>{{title}}</h1>
+    <p class="lead">This site is currently under development.</p>
+  </div>
 
-<div id="posts">
-  {{#each posts}}
-  <h3 class="post-title"><a href="{{url}}">{{title}}</a></h3>
-  <p class="post-summary">{{summary}}</p>
-  {{/each}}
-</div>
+  <div id="posts">
+    {{#each posts}}
+    <h3 class="post-title"><a href="{{url}}">{{title}}</a></h3>
+    <p class="post-summary">{{summary}}</p>
+    {{/each}}
+  </div>
 
-<span id="code-version">{{version}}</span>
+  <span id="code-version">{{version}}</span>
+</main>
