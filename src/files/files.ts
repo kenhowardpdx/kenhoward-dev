@@ -1,6 +1,7 @@
 import aws from 'aws-sdk'
 import fs from 'fs'
 import marked from 'marked'
+import prism from 'prismjs'
 import yaml from 'yamljs'
 
 const S3_ACCESS_KEY_ID = process.env.S3_ACCESS_KEY_ID
@@ -104,16 +105,14 @@ const fetchFileFromS3 = async (filePath: string): Promise<string> => {
 
 const fetchFilesFromDisk = (dir: string): File[] => {
   const files = fs.readdirSync(dir, { encoding: 'utf8' })
-  return files.map(
-    (fileName: string): File => {
-      const filePath = `${dir}/${fileName}`
-      const file = fetchFileFromDisk(filePath)
-      return {
-        file,
-        path: filePath
-      }
+  return files.map((fileName: string): File => {
+    const filePath = `${dir}/${fileName}`
+    const file = fetchFileFromDisk(filePath)
+    return {
+      file,
+      path: filePath
     }
-  )
+  })
 }
 
 const fetchFileFromDisk = (filePath: string): string => {
@@ -128,6 +127,16 @@ interface Metadata {
 }
 
 const parseMarkdown = (content: string): [Body, Metadata] => {
+  marked.setOptions({
+    highlight: (code: string, lang: string) => {
+      const grammar =
+        prism.languages[lang] !== undefined
+          ? prism.languages[lang]
+          : prism.languages.plaintext
+      const language = prism.languages[lang] !== undefined ? lang : 'plaintext'
+      return prism.highlight(code, grammar, language)
+    }
+  })
   const hasMetadata = content.startsWith('---')
   let body = ''
   const metadata = {

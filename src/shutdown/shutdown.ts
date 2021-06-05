@@ -25,12 +25,15 @@ export const createShutdownHandler = (
     process.exit(exitCode)
   }
 
-  return (exitCode: number, reason: string) => (err: Error): void => {
-    const msg = err?.message
-    const stack = err.stack !== undefined ? err.stack : ''
-    logger.error(`${reason}${msg !== undefined ? `: ${msg}\n` : '\n'}${stack}`)
+  return (exitCode: number, reason: string) =>
+    (err: Error): void => {
+      const msg = err?.message
+      const stack = err.stack !== undefined ? err.stack : ''
+      logger.error(
+        `${reason}${msg !== undefined ? `: ${msg}\n` : '\n'}${stack}`
+      )
 
-    setTimeout(exit, timeout).unref()
-    server.stop()
-  }
+      setTimeout(exit, timeout).unref()
+      server.stop()
+    }
 }
