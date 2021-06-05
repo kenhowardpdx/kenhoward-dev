@@ -25,9 +25,14 @@ My personal website
 > npx eslint && npx tsc --noEmit
 ```
 
-5. Start coding
+6. Check that tests pass
+```sh
+> npx jest
+```
 
-6. Check formatting
+6. Start coding
+
+7. Check formatting
 ```sh
 > npx prettier --write src
 ```
