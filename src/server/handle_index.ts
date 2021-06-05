@@ -15,17 +15,15 @@ const handleIndex = async (
   const order = 'asc'
   const postsPath = `${server.options.dataPath}/posts`
   const postFiles = await fetchFiles(postsPath, max, order)
-  const posts = postFiles.map(
-    ({ file, path }): PostDetail => {
-      const [, m] = parseMarkdown(file)
-      const url = getPostUrlFromPath(path, postsPath, '/posts')
-      return {
-        summary: m.summary,
-        title: m.title,
-        url
-      }
+  const posts = postFiles.map(({ file, path }): PostDetail => {
+    const [, m] = parseMarkdown(file)
+    const url = getPostUrlFromPath(path, postsPath, '/posts')
+    return {
+      summary: m.summary,
+      title: m.title,
+      url
     }
-  )
+  })
   return h.view(template, { title, posts })
 }
 

@@ -21,7 +21,8 @@ describe('flags', (): void => {
     test('prints help when undefined flag encountered', (): void => {
       expect.assertions(1)
 
-      const want = /^test\nUnknown Options: \n\s{2}"-undefined" => "true"\n\s{2}"-nope" => "false"\n\s{2}"not-defined" => "true"\n\nOptions:\s\n/
+      const want =
+        /^test\nUnknown Options: \n\s{2}"-undefined" => "true"\n\s{2}"-nope" => "false"\n\s{2}"not-defined" => "true"\n\nOptions:\s\n/
       const logger = {
         log: jest.fn() as any
       }

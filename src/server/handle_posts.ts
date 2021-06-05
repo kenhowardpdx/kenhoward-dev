@@ -13,17 +13,15 @@ const handlePosts = async (
   const title = 'Posts'
   const postsPath = `${server.options.dataPath}/posts`
   const postFiles = await fetchFiles(postsPath)
-  const posts = postFiles.map(
-    ({ file, path }): PostDetail => {
-      const [, m] = parseMarkdown(file)
-      const url = getPostUrlFromPath(path, postsPath, '/posts')
-      return {
-        summary: m.summary,
-        title: m.title,
-        url
-      }
+  const posts = postFiles.map(({ file, path }): PostDetail => {
+    const [, m] = parseMarkdown(file)
+    const url = getPostUrlFromPath(path, postsPath, '/posts')
+    return {
+      summary: m.summary,
+      title: m.title,
+      url
     }
-  )
+  })
   return h.view(template, { title, posts })
 }
 
