@@ -3,6 +3,8 @@ import fs from 'fs'
 import marked from 'marked'
 import prism from 'prismjs'
 import yaml from 'yamljs'
+import loadLanguages from 'prismjs/components/'
+loadLanguages(['go', 'typescript'])
 
 const S3_ACCESS_KEY_ID = process.env.S3_ACCESS_KEY_ID
 const S3_ACCESS_KEY_SECRET = process.env.S3_ACCESS_KEY_SECRET
@@ -130,9 +132,7 @@ const parseMarkdown = (content: string): [Body, Metadata] => {
   marked.setOptions({
     highlight: (code: string, lang: string) => {
       const grammar =
-        prism.languages[lang] !== undefined
-          ? prism.languages[lang]
-          : prism.languages.plaintext
+        prism.languages[lang] !== undefined ? prism.languages[lang] : {}
       const language = prism.languages[lang] !== undefined ? lang : 'plaintext'
       return prism.highlight(code, grammar, language)
     }
