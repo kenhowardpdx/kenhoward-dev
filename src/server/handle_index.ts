@@ -11,7 +11,7 @@ const handleIndex = async (
   h: Hapi.ResponseToolkit
 ): Promise<Hapi.ResponseObject> => {
   const title = 'Home'
-  const max = 1
+  const max = 5
   const order = 'asc'
   const postsPath = `${server.options.dataPath}/posts`
   const postFiles = await fetchFiles(postsPath, max, order)
