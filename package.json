@@ -1,22 +1,4 @@
 {
-  "name": "kenhoward-dev",
-  "version": "0.2.1",
-  "description": "My personal website",
-  "main": "dist/server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kenhowardpdx/kenhoward-dev.git"
-  },
-  "keywords": [],
-  "author": "Ken Howard <ken@kenhoward.dev",
-  "license": "UNLICENSED",
-  "bugs": {
-    "url": "https://github.com/kenhowardpdx/kenhoward-dev/issues"
-  },
-  "homepage": "https://github.com/kenhowardpdx/kenhoward-dev#readme",
   "dependencies": {
     "@hapi/hapi": "^20.0.2",
     "@hapi/inert": "^6.0.3",
