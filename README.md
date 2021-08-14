@@ -1,6 +1,8 @@
 kenhoward-dev
 =============
 
+[![Continuous Integration](https://github.com/kenhowardpdx/kenhoward-dev/actions/workflows/ci.yaml/badge.svg)](https://github.com/kenhowardpdx/kenhoward-dev/actions/workflows/ci.yaml)
+
 My personal website
 
 ## Development
