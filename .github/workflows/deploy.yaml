@@ -1,0 +1,23 @@
+name: Deploy
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: '${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}'
+      - name: Docker Login
+        uses: docker/login-action@v1.10.0
+        with:
+          registry: '${{ secrets.REGISTRY }}'
+          username: '${{ secrets.TOKEN }}'
+          password: '${{ secrets.TOKEN }}'
+      - run: make build
+      - run: make deploy
+        env:
+          DO_TOKEN: '${{ secrets.TOKEN }}'

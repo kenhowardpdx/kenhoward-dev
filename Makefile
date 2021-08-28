@@ -29,12 +29,11 @@ clean:
 	rm -rf out
 
 deploy:
-ifeq ($(CIRCLE_BRANCH),main)
 	# On merge to main publish update the "latest" alias to the new version
 	docker tag ${IMAGE}:${VERSION} ${REGISTRY}/${IMAGE}:latest
 	docker push ${REGISTRY}/${IMAGE}:latest
-endif
 	docker tag ${IMAGE}:${VERSION} ${REGISTRY}/${IMAGE}:${VERSION}
 	docker push ${REGISTRY}/${IMAGE}:${VERSION}
 	# rolling release
-	bin/deploy --version ${VERSION} --token $(DO_TOKEN) --app ${APP_ENV}
+	doctl apps list --format ID --no-header -t $(DO_TOKEN) | xargs doctl apps spec get -t $(DO_TOKEN) > app.yaml
+	doctl apps list --format ID --no-header -t $(DO_TOKEN) | xargs doctl apps update --spec app.yaml -t $(DO_TOKEN)
